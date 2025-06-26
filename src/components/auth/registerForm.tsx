@@ -25,10 +25,13 @@ const RegisterForm: React.FC = () => {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<Inputs>({
     resolver: zodResolver(registerSchema),
+    mode: 'onChange',
   });
 
+  const password = watch('password');
   // handlers:
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
@@ -81,7 +84,11 @@ const RegisterForm: React.FC = () => {
                 type="password"
                 error={errors.password?.message}
                 autoComplete="new-password"
-                helperText="Must be at least 8 characters with uppercase, lowercase, and a special character"
+                helperText={
+                  !errors.password?.message && password?.length > 0
+                    ? 'Looks good so far!'
+                    : 'Must contain at least 8 characters, uppercase, lowercase, and special character'
+                }
               />
 
               <Input

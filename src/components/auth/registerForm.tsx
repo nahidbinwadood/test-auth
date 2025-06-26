@@ -7,10 +7,32 @@ import {
   CardFooter,
   CardHeader,
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import Link from 'next/link';
 
+import Link from 'next/link';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { Input } from '../ui/input';
+import { registerSchema } from '@/app/schemas/schemas';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+type Inputs = {
+  full_name: string;
+  email: string;
+  password: string;
+  confirm_password: string;
+};
 const RegisterForm: React.FC = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({
+    resolver: zodResolver(registerSchema),
+  });
+
+  // handlers:
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    console.log(data);
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
@@ -33,43 +55,46 @@ const RegisterForm: React.FC = () => {
           </CardHeader>
 
           <CardContent>
-            <form className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <Input
-                label="Full name"
+                {...register('full_name')}
                 type="text"
-                name="name"
+                label="Full name"
+                error={errors.full_name?.message}
                 placeholder="Enter your full name"
                 autoComplete="name"
               />
 
               <Input
-                label="Email address"
+                {...register('email')}
                 type="email"
-                name="email"
+                label="Email"
                 placeholder="Enter your email"
+                error={errors.email?.message}
                 autoComplete="email"
               />
 
               <Input
+                {...register('password')}
+                placeholder="Enter your password"
                 label="Password"
                 type="password"
-                name="password"
-                placeholder="Create a password"
+                error={errors.password?.message}
                 autoComplete="new-password"
-                helperText="Must be at least 6 characters"
+                helperText="Must be at least 8 characters with uppercase, lowercase, and a special character"
               />
 
               <Input
-                label="Confirm password"
+                {...register('confirm_password')}
+                label="Confirm Password"
                 type="password"
-                name="confirmPassword"
                 placeholder="Confirm your password"
+                error={errors.confirm_password?.message}
                 autoComplete="new-password"
               />
 
               <Button type="submit" className="w-full">
-                Create account
-                {/* {loading ? 'Creating account...' : 'Create account'} */}
+                Create Account
               </Button>
             </form>
           </CardContent>

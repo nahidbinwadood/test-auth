@@ -10,10 +10,25 @@ import {
 } from '@/components/ui/card';
 import Button from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useForm } from 'react-hook-form';
 
+type Inputs = {
+  email: string;
+  password: string;
+};
 const LoginForm = () => {
   //   const router = useRouter();
 
+  const {
+    register,
+    handleSubmit,
+    // formState: { errors },
+  } = useForm<Inputs>();
+
+  // handlers:
+  const onSubmit = (data: Inputs) => {
+    console.log(data);
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
@@ -36,21 +51,23 @@ const LoginForm = () => {
           </CardHeader>
 
           <CardContent>
-            <form className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <Input
+                {...register('email')}
                 label="Email address"
                 type="email"
                 name="email"
                 placeholder="Enter your email"
                 autoComplete="email"
               />
-
               <Input
+                {...register('password')}
                 label="Password"
                 type="password"
                 name="password"
                 placeholder="Enter your password"
                 autoComplete="current-password"
+                helperText="Must be at least 6 characters"
               />
 
               <Button

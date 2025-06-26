@@ -1,3 +1,4 @@
+import { cn } from '@/app/lib/utils';
 import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -11,8 +12,8 @@ const Button = ({
   className,
   variant = 'primary',
   size = 'md',
-  // loading = false,
-}: ButtonProps) => {
+}: // loading = false,
+ButtonProps) => {
   const baseClasses =
     'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
   const variantClasses = {
@@ -28,8 +29,8 @@ const Button = ({
     lg: 'px-6 py-3 text-base',
   };
 
-  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
-  return <button className={classes}>{children}</button>;
+  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]}`;
+  return <button className={cn(classes, className)}>{children}</button>;
 };
 
 export default Button;

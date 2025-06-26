@@ -1,4 +1,5 @@
 import Button from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import React from 'react';
 
@@ -25,7 +26,7 @@ const Homepage = () => {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="bg-transparent border-white text-white hover:bg-white hover:text-blue-600"
+                  className="bg-purple-500 text-white font-medium hover:bg-white hover:text-blue-600"
                 >
                   Sign In
                 </Button>
@@ -49,7 +50,7 @@ const Homepage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* <Card>
+            <Card>
               <CardContent className="p-8 text-center">
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                   <svg
@@ -125,7 +126,7 @@ const Homepage = () => {
                   Full TypeScript support with Tailwind v4
                 </p>
               </CardContent>
-            </Card> */}
+            </Card>
           </div>
         </div>
       </section>

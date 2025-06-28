@@ -1,3 +1,4 @@
+import Counter from '@/components/counter';
 import Button from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
@@ -35,6 +36,8 @@ const Homepage = () => {
           </div>
         </div>
       </section>
+      {/* counter section */}
+      <Counter />
 
       {/* Features Section */}
       <section className="py-24 bg-purple-200">

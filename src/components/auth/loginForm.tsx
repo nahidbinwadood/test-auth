@@ -11,6 +11,7 @@ import {
 import Button from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
+import { useUserLoginMutation } from '@/features/auth/auth-api';
 
 type Inputs = {
   email: string;
@@ -18,7 +19,8 @@ type Inputs = {
 };
 const LoginForm = () => {
   //   const router = useRouter();
-
+  const [loginMutation, { data: loginData, isSuccess, isLoading }] =
+    useUserLoginMutation(undefined);
   const {
     register,
     handleSubmit,
@@ -26,8 +28,14 @@ const LoginForm = () => {
   } = useForm<Inputs>();
 
   // handlers:
-  const onSubmit = (data: Inputs) => {
+  const onSubmit = async (data: Inputs) => {
     console.log(data);
+    try {
+      const response = await loginMutation(data).unwrap();
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

@@ -11,7 +11,11 @@ export const authApi = apiSlice.injectEndpoints({
         };
       },
     }),
+    profileData: builder.query({
+      query: () => '/api/secret-root/admin/auth/profile',
+      providesTags: ['profile-data'],
+    }),
   }),
 });
 
-export const { useUserLoginMutation } = authApi;
+export const { useUserLoginMutation, useProfileDataQuery } = authApi;

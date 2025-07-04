@@ -10,12 +10,14 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = ({
   children,
   className,
+  type = 'button',
   variant = 'primary',
   size = 'md',
+  ...props
 }: // loading = false,
 ButtonProps) => {
   const baseClasses =
-    'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
+    'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer';
   const variantClasses = {
     primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
     secondary: 'bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500',
@@ -30,7 +32,11 @@ ButtonProps) => {
   };
 
   const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]}`;
-  return <button className={cn(classes, className)}>{children}</button>;
+  return (
+    <button type={type} className={cn(classes, className)} {...props}>
+      {children}
+    </button>
+  );
 };
 
 export default Button;

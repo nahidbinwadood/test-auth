@@ -18,6 +18,7 @@ const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: baseQuery,
   endpoints: () => ({}),
+  tagTypes: ['profile-data'],
 });
 
 export default apiSlice;

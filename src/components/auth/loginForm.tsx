@@ -1,17 +1,25 @@
 'use client';
 
-import type React from 'react';
-import Link from 'next/link';
+import Button from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from '@/components/ui/card';
-import Button from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  useProfileDataQuery,
+  useUserLoginMutation,
+} from '@/features/auth/auth-api';
+import { setToken } from '@/features/auth/auth-slice';
+import { useAppDispatch, useAppSelector } from '@/features/redux-hook';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
-import { useUserLoginMutation } from '@/features/auth/auth-api';
+import toast from 'react-hot-toast';
+import { signIn } from 'next-auth/react';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 type Inputs = {
   email: string;
@@ -19,13 +27,36 @@ type Inputs = {
 };
 const LoginForm = () => {
   //   const router = useRouter();
-  const [loginMutation, { data: loginData, isSuccess, isLoading }] =
-    useUserLoginMutation(undefined);
+  const { accessToken } = useAppSelector((state) => state.authSlice);
+  const { data: profileData } = useProfileDataQuery(null, {
+    skip: !accessToken,
+  });
+
+  const dispatch = useAppDispatch();
+  const { replace } = useRouter();
+  const [loginMutation, { isLoading }] = useUserLoginMutation(undefined);
   const {
     register,
     handleSubmit,
     // formState: { errors },
   } = useForm<Inputs>();
+
+  // useEffects:
+  useEffect(() => {
+    if (accessToken && profileData) {
+      signIn('credentials', {
+        user: JSON.stringify(profileData),
+        redirect: false,
+      }).then((callback) => {
+        if (callback?.error) {
+          toast.error(callback.error);
+        } else {
+          toast.success('login successful');
+          replace('/');
+        }
+      });
+    }
+  }, [accessToken, profileData, replace]);
 
   // handlers:
   const onSubmit = async (data: Inputs) => {
@@ -34,6 +65,17 @@ const LoginForm = () => {
       const response = await loginMutation(data).unwrap();
       console.log(response);
     } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleDemoLogin = async (email: string, password: string) => {
+    try {
+      const response = await loginMutation({ email, password }).unwrap();
+      if (response?.data?.token) {
+        dispatch(setToken(response?.data?.token));
+      }
+    } catch (error) {
+      toast.error('Login Failed');
       console.log(error);
     }
   };
@@ -79,13 +121,25 @@ const LoginForm = () => {
               />
 
               <Button
-                type="submit"
+                onClick={() => handleDemoLogin('admin@demo.com', '123456')}
+                type="button"
                 className="w-full"
-                // loading={loading}
-                // disabled={loading}
               >
-                Sign in
-                {/* {loading ? 'Signing in...' : 'Sign in'} */}
+                {isLoading ? 'Loading...' : 'Login as Admin'}
+              </Button>
+              <Button
+                onClick={() => handleDemoLogin('moderator@demo.com', '123456')}
+                type="button"
+                className="w-full"
+              >
+                {isLoading ? 'Loading...' : 'Login as Moderator'}
+              </Button>
+              <Button
+                onClick={() => handleDemoLogin('studio@demo.com', '123456')}
+                type="button"
+                className="w-full"
+              >
+                {isLoading ? 'Loading...' : 'Login as Studio Partner'}
               </Button>
             </form>
           </CardContent>
